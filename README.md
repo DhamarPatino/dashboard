@@ -1,3 +1,4 @@
+
 # Dashboard del Clima
 
 Este proyecto consiste en un dashboard interactivo diseñado para visualizar información meteorológica en tiempo real y datos históricos del clima. Su objetivo principal es proporcionar una herramienta intuitiva y accesible que permita a los usuarios consultar el estado actual del tiempo, analizar patrones climáticos y tomar decisiones informadas basadas en datos.
