@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Grid } from '@mui/material';
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
+import HeaderUI from './componentes/HeaderUI';
+import AlertUI from './componentes/AlertUI';
 import './App.css'
 
 function App() {
@@ -11,10 +13,14 @@ function App() {
         <Grid container spacing={5} justifyContent="center" alignItems="center">
 
          {/* Encabezado */}
-         <Grid size={{ xs:2, md:12}}>Elemento: Encabezado</Grid>
+         <Grid size={{ xs:2, md:12}}>
+          <HeaderUI/>
+        </Grid>
 
          {/* Alertas */}
-         <Grid size={{ xs: 12, md: 12 }}>Elemento: Alertas</Grid>
+         <Grid item xs={12} md={12} justifyContent="right" alignItems="center">
+           <AlertUI config={{ description: "No se preveen lluvias" }} />
+        </Grid>
 
          {/* Selector */}
          <Grid size={{ xs: 12, md: 3 }}>Elemento: Selector</Grid>
