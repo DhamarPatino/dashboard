@@ -12,6 +12,7 @@ export default function SelectorUI() {
     };
 return (
    <FormControl fullWidth>
+    
       <InputLabel id="city-select-label">Ciudad</InputLabel>
       <Select
          labelId="city-select-label"
