@@ -5,12 +5,20 @@ import AlertUI from './components/AlertUI';
 import SeclectorUI from './components/SelectorUI';
 import IndicatorUI from './components/IndicatorUI';
 import DataFetcher from './functions/DataFetcher';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import OnlineUI from './components/OnlineUI';
 import { Card, CardHeader, CardContent } from '@mui/material';
 function App() {
-   const dataFetcherOutput = DataFetcher();
-   const [lastUpdated] = useState<Date>(new Date());
+   const [coords, setCoords] = useState({ lat: -2.17, lon: -79.92 });
+   const dataFetcherOutput = DataFetcher(coords);
+   const [lastUpdated, setLastUpdated] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLastUpdated(new Date());
+    }, 1000); // Actualiza cada segundo
+    return () => clearInterval(interval); // Limpia el intervalo al desmontar
+  }, []);
 
    return (
       <>
@@ -45,7 +53,7 @@ function App() {
                         📍 Selecciona tu Ubicación
                      </h2>
                    <CardContent>
-                     <SeclectorUI />
+                     <SeclectorUI onCityChange={setCoords}/>
                   </CardContent>
                   
             </Grid>
@@ -61,14 +69,11 @@ function App() {
                   <>
 
                      {/* Indicadores con datos obtenidos */}
-
                      <Grid size={{ xs: 12, md: 3 }} >
                         <IndicatorUI
                            title='Temperatura (2m)'
                            description={dataFetcherOutput.data.current.temperature_2m + " " + dataFetcherOutput.data.current_units.temperature_2m} />
                      </Grid>
-
-                     
 
                      <Grid size={{ xs: 12, md: 3 }}>
                         <IndicatorUI

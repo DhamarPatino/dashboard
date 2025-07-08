@@ -4,12 +4,34 @@ import MenuItem from '@mui/material/MenuItem';
 import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import { useState } from 'react';
 
-export default function SelectorUI() {
-    const [cityInput, setCityInput] = useState('');
+interface Coordinates {
+  lat: number;
+  lon: number;
+}
 
-    const handleChange = (event: SelectChangeEvent<string>) => {
-        setCityInput(event.target.value)
-    };
+interface SelectorUIProps {
+  onCityChange: (coords: Coordinates) => void;
+}
+
+const cityCoordinates = {
+  guayaquil: { lat: -2.1962, lon: -79.8862 },
+  quito: { lat: -0.180653, lon: -78.467834 },
+  manta: { lat: -0.967653, lon: -80.708911 },
+  cuenca: { lat: -2.90055, lon: -79.00453 }
+};
+
+export default function SelectorUI({ onCityChange }: SelectorUIProps) {
+  const [cityInput, setCityInput] = useState('');
+
+  const handleChange = (event: SelectChangeEvent<string>) => {
+    const selectedCity = event.target.value;
+    setCityInput(selectedCity);
+
+    const coords = cityCoordinates[selectedCity as keyof typeof cityCoordinates];
+    if (coords) {
+      onCityChange(coords); // envías lat/lon al padre
+    }
+  };
 return (
    <FormControl fullWidth>
     
