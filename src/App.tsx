@@ -44,9 +44,7 @@ function App() {
 
             {/* Selector */}
             <Grid size={{ xs: 12, md: 12 }}>
-                   <h2 className="h-8 w-8 text-sky-600" >
-                        📍 Selecciona tu Ubicación
-                     </h2>
+                   
                    <CardContent>
                      <SelectorUI onCityChange={setCoords}/>
                   </CardContent>
