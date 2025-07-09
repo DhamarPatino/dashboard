@@ -2,15 +2,18 @@ import './App.css'
 import { Grid } from '@mui/material';
 import HeaderUI from './components/HeaderUI';
 import AlertUI from './components/AlertUI';
-import SeclectorUI from './components/SelectorUI';
+import SelectorUI from './components/SelectorUI';
 import IndicatorUI from './components/IndicatorUI';
 import DataFetcher from './functions/DataFetcher';
 import { useState } from 'react';
 import OnlineUI from './components/OnlineUI';
 import { Card, CardHeader, CardContent } from '@mui/material';
+import TableUI from './components/TableUI';
+import ChartUI from './components/ChartUI';
 function App() {
-   const dataFetcherOutput = DataFetcher();
-   const [lastUpdated] = useState<Date>(new Date());
+   const [coords, setCoords] = useState({ lat: -2.17, lon: -79.92 });
+   const dataFetcherOutput = DataFetcher(coords);
+   const [lastUpdated, setLastUpdated] = useState(new Date());
 
    return (
       <>
@@ -45,7 +48,7 @@ function App() {
                         📍 Selecciona tu Ubicación
                      </h2>
                    <CardContent>
-                     <SeclectorUI />
+                     <SelectorUI onCityChange={setCoords}/>
                   </CardContent>
                   
             </Grid>
@@ -81,7 +84,7 @@ function App() {
                            title='Humedad relativa'
                            description={dataFetcherOutput.data.current.relative_humidity_2m + " " + dataFetcherOutput.data.current_units.relative_humidity_2m} />
                      </Grid>
-                     <Grid size={{ xs: 12, md: 3 }}>
+                     {/*<Grid size={{ xs: 12, md: 3 }}>
                         <IndicatorUI
                            title='Presión atmosférica'
                            description={dataFetcherOutput.data.current.surface_pressure + " " + dataFetcherOutput.data.current_units.surface_pressure} />
@@ -90,18 +93,27 @@ function App() {
                         <IndicatorUI
                            title='Visibilidad'
                            description={dataFetcherOutput.data.hourly.visibility[0] + " " + dataFetcherOutput.data.hourly_units.visibility} />
-                     </Grid>
+                     </Grid>*/}
                   </>
                )}
 
             </Grid>
             {/* Gráfico */}
-            <Grid sx={{ display: { xs: "none", md: "block" } }}
-               size={{ xs: 12, md: 6 }}>Elemento: Gráfico</Grid>
-
+            <Grid sx={{ display: { xs: "none", md: "block" } }} size={{ xs: 6, md: 6 }}>
+              <ChartUI
+                loading={dataFetcherOutput.loading}
+                error={dataFetcherOutput.error}
+                data={dataFetcherOutput.data}
+              />
+            </Grid>
             {/* Tabla */}
-            <Grid size={{ xs: 12, md: 6 }} sx={{ display: { xs: "none", md: "block" } }}>Elemento: Tabla</Grid>
-
+            <Grid size={{ xs: 6, md: 6 }} sx={{ display: { xs: "none", md: "block" } }}>
+              <TableUI
+                loading={dataFetcherOutput.loading}
+                error={dataFetcherOutput.error}
+                data={dataFetcherOutput.data}
+              />
+            </Grid>
             {/* Información adicional */}
             <Grid size={{ xs: 12, md: 12 }}>Elemento: Información adicional</Grid>
 
