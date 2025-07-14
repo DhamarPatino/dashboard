@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
 import type { OpenMeteoResponse } from '../types/DashboardTypes';
 
+interface DataFetcherProps {
+  lat: number;
+  lon: number;
+}
+
 interface DataFetcherOutput {
     data: OpenMeteoResponse | null;
     loading: boolean;
     error: string | null;
 }
-
-export default function DataFetcher() : DataFetcherOutput {
+export default function DataFetcher({ lat, lon }: DataFetcherProps) : DataFetcherOutput {
 
     const [data, setData] = useState<OpenMeteoResponse | null>(null);
     const [loading, setLoading] = useState(true);
@@ -16,7 +20,7 @@ export default function DataFetcher() : DataFetcherOutput {
     useEffect(() => {
 
         // Reemplace con su URL de la API de Open-Meteo obtenida en actividades previas
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&daily=temperature_2m_max,temperature_2m_min,wind_speed_10m_max,uv_index_max,rain_sum&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,surface_pressure,visibility,wind_speed_10m,wind_direction_10m&current=wind_speed_10m,wind_direction_10m,relative_humidity_2m,temperature_2m,surface_pressure,weather_code,precipitation&timezone=America%2FChicago`
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,wind_speed_10m_max,uv_index_max,rain_sum&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,surface_pressure,visibility,wind_speed_10m,wind_direction_10m&current=wind_speed_10m,wind_direction_10m,relative_humidity_2m,temperature_2m,surface_pressure,weather_code,precipitation&timezone=America%2FChicago`
 
         const fetchData = async () => {
 
@@ -44,9 +48,8 @@ export default function DataFetcher() : DataFetcherOutput {
             }
         };
 
-        fetchData();
-
-    }, []); // El array vacío asegura que el efecto se ejecute solo una vez después del primer renderizado
+         fetchData();
+         }, [lat, lon]);// El array vacío asegura que el efecto se ejecute solo una vez después del primer renderizado
 
     return { data, loading, error };
 

@@ -1,7 +1,4 @@
-import { useState } from 'react'
 import { Grid } from '@mui/material';
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import HeaderUI from './componentes/HeaderUI';
 import AlertUI from './componentes/AlertUI';
 import SelectorUI from './componentes/SelectorUI';
@@ -12,9 +9,7 @@ import ChartUI from './componentes/ChartUI';
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0);
   const dataFetcherOutput = DataFetcher();
-  const [lastUpdated] = useState<Date>(new Date());
   return (
     <Grid container spacing={5} justifyContent="center" alignItems="center">
 
