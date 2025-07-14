@@ -1,5 +1,4 @@
-import { FormControl, InputLabel, MenuItem, TextField, Button, Box, Typography } from '@mui/material';
-import { Map as MapIcon } from '@mui/icons-material';
+import { FormControl, InputLabel, MenuItem, Box, Typography } from '@mui/material';
 import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import { useState } from 'react';
 
@@ -24,6 +23,7 @@ export default function SelectorUI({ onCityChange }: SelectorUIProps) {
   const [cityInput, setCityInput] = useState('');
 
   const [customName, setCustomName] = useState('');
+  if(customName === '') {}
 
   // Manejo de ciudad predefinida seleccionada
   const handleChange = (event: SelectChangeEvent<string>) => {

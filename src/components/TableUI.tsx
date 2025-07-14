@@ -39,9 +39,9 @@ export default function TableUI({ loading, error, data }: TableUIProps) {
   if (!data) return null;
 
   // Ejemplo: usar los primeros 7 valores de temperatura y viento horario
-  const arrLabels = data.hourly.time.slice(0, 7);
-  const arrValues1 = data.hourly.temperature_2m.slice(0, 7);
-  const arrValues2 = data.hourly.wind_speed_10m.slice(0, 7);
+  const arrLabels = data.hourly.time;
+  const arrValues1 = data.hourly.temperature_2m;
+  const arrValues2 = data.hourly.wind_speed_10m;
 
   const rows = combineArrays(arrLabels, arrValues1, arrValues2);
 

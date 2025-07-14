@@ -7,13 +7,13 @@ import IndicatorUI from './components/IndicatorUI';
 import DataFetcher from './functions/DataFetcher';
 import { useState } from 'react';
 import OnlineUI from './components/OnlineUI';
-import { Card, CardHeader, CardContent } from '@mui/material';
+import { CardContent } from '@mui/material';
 import TableUI from './components/TableUI';
 import ChartUI from './components/ChartUI';
 function App() {
    const [coords, setCoords] = useState({ lat: -2.17, lon: -79.92 });
    const dataFetcherOutput = DataFetcher(coords);
-   const [lastUpdated, setLastUpdated] = useState(new Date());
+   const [lastUpdated] = useState(new Date());
 
    return (
       <>
