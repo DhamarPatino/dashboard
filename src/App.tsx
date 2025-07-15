@@ -1,21 +1,43 @@
+import './App.css'
 import { Grid } from '@mui/material';
 import HeaderUI from './componentes/HeaderUI';
 import AlertUI from './componentes/AlertUI';
 import SelectorUI from './componentes/SelectorUI';
-import IndicatorUI from './componentes/IndicatorUI';
-import DataFetcher from './functions/DataFetcher';
+import CardContent from '@mui/material/CardContent';
 import TableUI from './componentes/TableUI';
 import ChartUI from './componentes/ChartUI';
-import './App.css'
-
+import IndicatorUI from './componentes/IndicatorUI';
+import DataFetcher from './functions/DataFetcher';
+import OnlineUI from './componentes/OnlineUI';
+import { useState, useEffect } from 'react';
 function App() {
-  const dataFetcherOutput = DataFetcher();
+  const [coords, setCoords] = useState({ lat: -2.17, lon: -79.92 });
+  const dataFetcherOutput = DataFetcher(coords);
+  const [lastUpdated, setLastUpdated] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLastUpdated(new Date());
+    }, 1000); // Actualiza cada segundo
+    return () => clearInterval(interval); // Limpia el intervalo al desmontar
+  }, []);
   return (
     <Grid container spacing={5} justifyContent="center" alignItems="center">
 
       {/* Encabezado */}
-      <Grid size={{ xs: 2, md: 12 }}>
-        <HeaderUI />
+      <Grid container size={{ xs: 12, md: 12 }} justifyContent="center" alignItems="center">
+        <Grid size={{ xs: 12, md: 9 }}>
+          <HeaderUI />
+        </Grid>
+        <Grid size={{ xs: 12, md: 1.8 }} className="flex-row items-center justify-between">
+          <OnlineUI />
+        </Grid>
+        <Grid size={{ xs: 12, md: 1.2 }} className="flex-row items-center justify-end">
+          <div><p className="text-sky-100 text-sm">
+            🕒 {lastUpdated.toLocaleTimeString()}
+          </p>
+          </div>
+        </Grid>
       </Grid>
 
       {/* Alertas */}
@@ -24,8 +46,11 @@ function App() {
       </Grid>
 
       {/* Selector */}
-      <Grid size={{ xs: 12, md: 3 }}>
-        <SelectorUI />
+      <Grid size={{ xs: 12, md: 12 }}>
+        <CardContent>
+          <SelectorUI onCityChange={setCoords} />
+        </CardContent>
+
       </Grid>
 
       {/* Indicadores */}
@@ -39,14 +64,11 @@ function App() {
           <>
 
             {/* Indicadores con datos obtenidos */}
-
             <Grid size={{ xs: 12, md: 3 }} >
               <IndicatorUI
                 title='Temperatura (2m)'
                 description={dataFetcherOutput.data.current.temperature_2m + " " + dataFetcherOutput.data.current_units.temperature_2m} />
             </Grid>
-
-
 
             <Grid size={{ xs: 12, md: 3 }}>
               <IndicatorUI
@@ -71,7 +93,6 @@ function App() {
             </Grid>
           </>
         )}
-
       </Grid>
       {/* Gráfico */}
       <Grid size={{ xs: 6, md: 6 }} sx={{ display: { xs: "none", md: "block" } }}>

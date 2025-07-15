@@ -11,6 +11,8 @@ interface DataFetcherOutput {
     loading: boolean;
     error: string | null;
 }
+const CACHE_DURATION_MINUTES = 15;
+
 export default function DataFetcher({ lat, lon }: DataFetcherProps) : DataFetcherOutput {
 
     const [data, setData] = useState<OpenMeteoResponse | null>(null);
@@ -21,11 +23,27 @@ export default function DataFetcher({ lat, lon }: DataFetcherProps) : DataFetche
 
         // Reemplace con su URL de la API de Open-Meteo obtenida en actividades previas
         const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,wind_speed_10m_max,uv_index_max,rain_sum&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,surface_pressure,visibility,wind_speed_10m,wind_direction_10m&current=wind_speed_10m,wind_direction_10m,relative_humidity_2m,temperature_2m,surface_pressure,weather_code,precipitation&timezone=America%2FChicago`
-
+        const cacheKey = `weather_${lat}_${lon}`;
         const fetchData = async () => {
-
             try {
+                // Paso 1: Buscar en localStorage
+                const cached = localStorage.getItem(cacheKey);
 
+                if (cached) {
+                    const parsed = JSON.parse(cached);
+                    const now = Date.now();
+                    const cachedTime = parsed.timestamp;
+                    const diffMinutes = (now - cachedTime) / (1000 * 60);
+
+                    // Paso 2: Si los datos son recientes, úsalos
+                    if (diffMinutes < CACHE_DURATION_MINUTES) {
+                        setData(parsed.data);
+                        setLoading(false);
+                        return;
+                    }
+                }
+
+                // Paso 3: Llamar a la API si no hay datos o están vencidos
                 const response = await fetch(url);
 
                 if (!response.ok) {
@@ -33,23 +51,32 @@ export default function DataFetcher({ lat, lon }: DataFetcherProps) : DataFetche
                 }
 
                 const result: OpenMeteoResponse = await response.json();
+
+                // Paso 4: Guardar en localStorage
+                localStorage.setItem(cacheKey, JSON.stringify({
+                    data: result,
+                    timestamp: Date.now()
+                }));
+
                 setData(result);
 
             } catch (err: any) {
-
-                if (err instanceof Error) {
-                    setError(err.message);
+                // Paso 5: Si hay error, usar cache viejo si existe
+                const fallback = localStorage.getItem(cacheKey);
+                if (fallback) {
+                    const parsed = JSON.parse(fallback);
+                    setData(parsed.data);
+                    setError("No se pudo actualizar, se usan datos almacenados.");
                 } else {
-                    setError("Ocurrió un error desconocido al obtener los datos.");
+                    setError(err instanceof Error ? err.message : "Error desconocido.");
                 }
-
             } finally {
                 setLoading(false);
             }
         };
 
-         fetchData();
-         }, [lat, lon]);// El array vacío asegura que el efecto se ejecute solo una vez después del primer renderizado
+        fetchData();
+    }, [lat, lon]);// El array vacío asegura que el efecto se ejecute solo una vez después del primer renderizado
 
     return { data, loading, error };
 
