@@ -26,9 +26,41 @@ export default function ChartUI({ loading, error, data }: ChartUIProps) {
   }));
 
   return (
-    <Box  sx={{   height: 300,
-  width: '100%',   bgcolor: 'rgba(186, 230, 253, 0.5)',   borderRadius: 4,   padding: 2,  backdropFilter: 'blur(6px)',}}>
-      <Typography variant="h5" sx={{ mb: 2 }}>
+    <Box sx={{
+      height: 300,
+      width: '100%',
+      bgcolor: 'rgba(186, 230, 253, 0.5)',
+      borderRadius: 4,
+      padding: 2,
+      backdropFilter: 'blur(6px)',
+      // Adaptación al tema
+      '@media (prefers-color-scheme: dark)': {
+        bgcolor: 'rgba(51, 65, 85, 0.7)',
+        color: '#ffffff',
+        '& .recharts-text': {
+          fill: '#ffffff !important',
+        }
+      },
+      '@media (prefers-color-scheme: light)': {
+        bgcolor: 'rgba(186, 230, 253, 0.5)',
+        color: '#1a1a1a',
+        '& .recharts-text': {
+          fill: '#475569 !important',
+        }
+      }
+    }}>
+      <Typography 
+        variant="h5" 
+        sx={{ 
+          mb: 2,
+          '@media (prefers-color-scheme: dark)': {
+            color: '#ffffff',
+          },
+          '@media (prefers-color-scheme: light)': {
+            color: '#1a1a1a',
+          }
+        }}
+      >
         Temperatura y Viento (próximas 24h)
       </Typography>
       <ResponsiveContainer width="100%" height="100%">
@@ -43,26 +75,52 @@ export default function ChartUI({ loading, error, data }: ChartUIProps) {
               <stop offset="95%" stopColor="#38bdf8" stopOpacity={0.1} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(71, 85, 105, 0.3)" />
-          <XAxis dataKey="time" tick={{ fontSize: 12, fill: '#475569' }} />
+          <CartesianGrid 
+            strokeDasharray="3 3" 
+            stroke="var(--grid-color, rgba(71, 85, 105, 0.3))"
+          />
+          <XAxis 
+            dataKey="time" 
+            tick={{ 
+              fontSize: 12, 
+              fill: 'var(--text-color, #475569)' 
+            }} 
+          />
           <YAxis
             yAxisId="left"
-            label={{ value: 'Temperatura (°C)', angle: -90, position: 'insideLeft' }}
-            tick={{ fontSize: 12, fill: '#475569' }}
+            label={{ 
+              value: 'Temperatura (°C)', 
+              angle: -90, 
+              position: 'insideLeft',
+              style: { textAnchor: 'middle', fill: 'var(--text-color, #475569)' }
+            }}
+            tick={{ 
+              fontSize: 12, 
+              fill: 'var(--text-color, #475569)' 
+            }}
           />
           <YAxis
             yAxisId="right"
             orientation="right"
-            label={{ value: 'Viento (km/h)', angle: 90, position: 'insideRight' }}
-            tick={{ fontSize: 12, fill: '#475569' }}
+            label={{ 
+              value: 'Viento (km/h)', 
+              angle: 90, 
+              position: 'insideRight',
+              style: { textAnchor: 'middle', fill: 'var(--text-color, #475569)' }
+            }}
+            tick={{ 
+              fontSize: 12, 
+              fill: 'var(--text-color, #475569)' 
+            }}
           />
           <Tooltip
             formatter={(value, name) => [`${value}${name === 'temperature' ? '°C' : ' km/h'}`, name === 'temperature' ? '🌡️ Temperatura' : '💨 Viento']}
             labelFormatter={(label) => `🕐 ${label}`}
             contentStyle={{
-              backgroundColor: 'white',
+              backgroundColor: 'var(--tooltip-bg, white)',
               borderRadius: '12px',
-              border: '1px solid #ccc',
+              border: '1px solid var(--tooltip-border, #ccc)',
+              color: 'var(--tooltip-text, #000)',
             }}
           />
           <Line yAxisId="left" type="monotone" dataKey="temperature" stroke="#f97316" fill="url(#tempGradient)" />

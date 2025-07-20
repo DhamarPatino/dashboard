@@ -25,9 +25,7 @@ const AlertUI = ({ weatherData }: AlertUIProps) => {
   const currentWindSpeed = weatherData.current.wind_speed_10m;
 
   const tomorrowPrecipitation = weatherData.daily?.rain_sum?.[1] ?? 0;
-  const tomorrowTempMax = weatherData.daily?.temperature_2m_max?.[1] ?? 0;
-  const tomorrowTempMin = weatherData.daily?.temperature_2m_min?.[1] ?? 0;
-  const tomorrowWind = weatherData.daily?.wind_speed_10m_max?.[1] ?? 0;
+
 
   // Alertas basadas en condiciones
   if (currentTemp > 35) {
