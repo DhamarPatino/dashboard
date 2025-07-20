@@ -8,21 +8,22 @@ import DataFetcher from './functions/DataFetcher';
 import { useState, useEffect } from 'react';
 import OnlineUI from './components/OnlineUI';
 import { CardContent } from '@mui/material';
+import ChartUI from './components/ChartUI';
 function App() {
    const [coords, setCoords] = useState({ lat: -2.17, lon: -79.92 });
    const dataFetcherOutput = DataFetcher(coords);
    const [lastUpdated, setLastUpdated] = useState(new Date());
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setLastUpdated(new Date());
-    }, 1000); // Actualiza cada segundo
-    return () => clearInterval(interval); // Limpia el intervalo al desmontar
-  }, []);
+   useEffect(() => {
+      const interval = setInterval(() => {
+         setLastUpdated(new Date());
+      }, 1000); // Actualiza cada segundo
+      return () => clearInterval(interval); // Limpia el intervalo al desmontar
+   }, []);
 
    return (
       <>
-         <Grid container spacing={5} justifyContent="center" alignItems="center">
+         <Grid container spacing={5} justifyContent="center" alignItems="center" >
 
             {/* Encabezado: ocupa todo el ancho */}
             <Grid container size={{ xs: 12, md: 12 }} justifyContent="center" alignItems="center">
@@ -42,17 +43,17 @@ function App() {
 
 
             {/* Alertas */}
-            <Grid size={{ xs: 12, md: 12 }}
-               container justifyContent="right" alignItems="center">
-               <AlertUI description="No se preveen lluvias" />
+            <Grid size={12} >
+               <AlertUI weatherData={dataFetcherOutput.data} />
             </Grid>
+
 
             {/* Selector */}
             <Grid size={{ xs: 12, md: 12 }}>
-                   <CardContent>
-                     <SeclectorUI onCityChange={setCoords}/>
-                  </CardContent>
-                  
+               <CardContent>
+                  <SeclectorUI onCityChange={setCoords} />
+               </CardContent>
+
             </Grid>
 
             {/* Indicadores */}
@@ -99,7 +100,11 @@ function App() {
             </Grid>
             {/* Gráfico */}
             <Grid sx={{ display: { xs: "none", md: "block" } }}
-               size={{ xs: 12, md: 6 }}>Elemento: Gráfico</Grid>
+               size={{ xs: 12, md: 6 }}>
+               <ChartUI loading={dataFetcherOutput.loading}
+                  error={dataFetcherOutput.error}
+                  data={dataFetcherOutput.data} />
+            </Grid>
 
             {/* Tabla */}
             <Grid size={{ xs: 12, md: 6 }} sx={{ display: { xs: "none", md: "block" } }}>Elemento: Tabla</Grid>
