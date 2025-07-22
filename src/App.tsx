@@ -9,6 +9,12 @@ import { useState, useEffect } from 'react';
 import OnlineUI from './components/OnlineUI';
 import { CardContent } from '@mui/material';
 import ChartUI from './components/ChartUI';
+import ThermostatIcon from '@mui/icons-material/Thermostat';
+import AirIcon from '@mui/icons-material/Air';
+import WaterDropIcon from '@mui/icons-material/WaterDrop';
+import ThermostatAutoIcon from '@mui/icons-material/ThermostatAuto';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+
 function App() {
    const [coords, setCoords] = useState({ lat: -2.17, lon: -79.92 });
    const dataFetcherOutput = DataFetcher(coords);
@@ -70,29 +76,45 @@ function App() {
                      <Grid size={{ xs: 12, md: 3 }} >
                         <IndicatorUI
                            title='Temperatura (2m)'
-                           description={dataFetcherOutput.data.current.temperature_2m + " " + dataFetcherOutput.data.current_units.temperature_2m} />
+                           description={dataFetcherOutput.data.current.temperature_2m + " " + dataFetcherOutput.data.current_units.temperature_2m}
+                           icon={<ThermostatIcon sx={{ color: "#fff", fontSize: 32 }} />}
+                           iconBg="linear-gradient(135deg, #ff9800 0%, #f44336 100%)"
+                        />
                      </Grid>
 
                      <Grid size={{ xs: 12, md: 3 }}>
                         <IndicatorUI
                            title='Velocidad del viento'
-                           description={dataFetcherOutput.data.current.wind_speed_10m + " " + dataFetcherOutput.data.current_units.wind_speed_10m} />
+                           description={dataFetcherOutput.data.current.wind_speed_10m + " " + dataFetcherOutput.data.current_units.wind_speed_10m}
+                           icon={<AirIcon sx={{ color: "#fff", fontSize: 32 }} />}
+                           iconBg="linear-gradient(135deg, #00c6fb 0%, #005bea 100%)"
+                        />
                      </Grid>
 
                      <Grid size={{ xs: 12, md: 3 }}>
                         <IndicatorUI
                            title='Humedad relativa'
-                           description={dataFetcherOutput.data.current.relative_humidity_2m + " " + dataFetcherOutput.data.current_units.relative_humidity_2m} />
+                           description={dataFetcherOutput.data.current.relative_humidity_2m + " " + dataFetcherOutput.data.current_units.relative_humidity_2m}
+                           icon={<WaterDropIcon sx={{ color: "#fff", fontSize: 32 }} />}
+                           iconBg="linear-gradient(135deg, #43cea2 0%, #185a9d 100%)"
+                        />
                      </Grid>
+
                      <Grid size={{ xs: 12, md: 3 }}>
                         <IndicatorUI
                            title='Presión atmosférica'
-                           description={dataFetcherOutput.data.current.surface_pressure + " " + dataFetcherOutput.data.current_units.surface_pressure} />
+                           description={dataFetcherOutput.data.current.surface_pressure + " " + dataFetcherOutput.data.current_units.surface_pressure}
+                           icon={<ThermostatAutoIcon sx={{ color: "#fff", fontSize: 32 }} />}
+                           iconBg="linear-gradient(135deg, #f7971e 0%, #ffd200 100%)"
+                        />
                      </Grid>
                      <Grid size={{ xs: 12, md: 3 }}>
                         <IndicatorUI
                            title='Visibilidad'
-                           description={dataFetcherOutput.data.hourly.visibility[0] + " " + dataFetcherOutput.data.hourly_units.visibility} />
+                           description={dataFetcherOutput.data.hourly.visibility[0] + " " + dataFetcherOutput.data.hourly_units.visibility}
+                           icon={<VisibilityIcon sx={{ color: "#fff", fontSize: 32 }} />}
+                           iconBg="linear-gradient(135deg, #00c853 0%, #b2ff59 100%)"
+                        />
                      </Grid>
                   </>
                )}
