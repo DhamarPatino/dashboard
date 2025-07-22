@@ -14,18 +14,28 @@ import AirIcon from '@mui/icons-material/Air';
 import WaterDropIcon from '@mui/icons-material/WaterDrop';
 import ThermostatAutoIcon from '@mui/icons-material/ThermostatAuto';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { defaultLocations } from './functions/Locations';
+import type { Location } from './functions/Locations';
+
 
 function App() {
    const [coords, setCoords] = useState({ lat: -2.17, lon: -79.92 });
    const dataFetcherOutput = DataFetcher(coords);
    const [lastUpdated, setLastUpdated] = useState(new Date());
+   const [locations] = useState<Location[]>(defaultLocations);
 
    useEffect(() => {
-      const interval = setInterval(() => {
-         setLastUpdated(new Date());
-      }, 1000); // Actualiza cada segundo
-      return () => clearInterval(interval); // Limpia el intervalo al desmontar
+      const interval = setInterval(() => setLastUpdated(new Date()), 1000);
+      return () => clearInterval(interval);
    }, []);
+
+   useEffect(() => {
+      console.log('Coordenadas cambiaron:', coords);
+   }, [coords]);
+
+   useEffect(() => {
+      console.log('Datos nuevos:', dataFetcherOutput.data);
+   }, [dataFetcherOutput.data]);
 
    return (
       <>
@@ -57,7 +67,10 @@ function App() {
             {/* Selector */}
             <Grid size={{ xs: 12, md: 12 }}>
                <CardContent>
-                  <SeclectorUI onCityChange={setCoords} />
+                  <SeclectorUI
+                     locations={locations}
+                     onCityChange={setCoords}
+                  />
                </CardContent>
 
             </Grid>
@@ -81,7 +94,18 @@ function App() {
                            iconBg="linear-gradient(135deg, #ff9800 0%, #f44336 100%)"
                         />
                      </Grid>
-
+                     <Grid size={{ xs: 12, md: 3 }}>
+                        <IndicatorUI
+                           title='Visibilidad'
+                           description={
+                              dataFetcherOutput.data.hourly.visibility[
+                                dataFetcherOutput.data.hourly.visibility.length-1
+                              ] + " " + dataFetcherOutput.data.hourly_units.visibility
+                           }
+                           icon={<VisibilityIcon sx={{ color: "#fff", fontSize: 32 }} />}
+                           iconBg="linear-gradient(135deg, #00c853 0%, #b2ff59 100%)"
+                        />
+                     </Grid>
                      <Grid size={{ xs: 12, md: 3 }}>
                         <IndicatorUI
                            title='Velocidad del viento'
@@ -108,14 +132,7 @@ function App() {
                            iconBg="linear-gradient(135deg, #f7971e 0%, #ffd200 100%)"
                         />
                      </Grid>
-                     <Grid size={{ xs: 12, md: 3 }}>
-                        <IndicatorUI
-                           title='Visibilidad'
-                           description={dataFetcherOutput.data.hourly.visibility[0] + " " + dataFetcherOutput.data.hourly_units.visibility}
-                           icon={<VisibilityIcon sx={{ color: "#fff", fontSize: 32 }} />}
-                           iconBg="linear-gradient(135deg, #00c853 0%, #b2ff59 100%)"
-                        />
-                     </Grid>
+                     
                   </>
                )}
 
