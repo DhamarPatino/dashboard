@@ -16,6 +16,7 @@ import ThermostatAutoIcon from '@mui/icons-material/ThermostatAuto';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { defaultLocations } from './functions/Locations';
 import type { Location } from './functions/Locations';
+import TableUI from './components/TableUI';
 
 
 function App() {
@@ -99,7 +100,7 @@ function App() {
                            title='Visibilidad'
                            description={
                               dataFetcherOutput.data.hourly.visibility[
-                                dataFetcherOutput.data.hourly.visibility.length-1
+                              dataFetcherOutput.data.hourly.visibility.length - 1
                               ] + " " + dataFetcherOutput.data.hourly_units.visibility
                            }
                            icon={<VisibilityIcon sx={{ color: "#fff", fontSize: 32 }} />}
@@ -132,7 +133,7 @@ function App() {
                            iconBg="linear-gradient(135deg, #f7971e 0%, #ffd200 100%)"
                         />
                      </Grid>
-                     
+
                   </>
                )}
 
@@ -146,7 +147,13 @@ function App() {
             </Grid>
 
             {/* Tabla */}
-            <Grid size={{ xs: 12, md: 6 }} sx={{ display: { xs: "none", md: "block" } }}>Elemento: Tabla</Grid>
+            <Grid size={{ xs: 12, md: 6 }} sx={{ display: { xs: "none", md: "block" } }}>
+               <TableUI
+                  loading={dataFetcherOutput.loading}
+                  error={dataFetcherOutput.error}
+                  data={dataFetcherOutput.data}
+               />
+            </Grid>
 
             {/* Información adicional */}
             <Grid size={{ xs: 12, md: 12 }}>Elemento: Información adicional</Grid>

@@ -27,7 +27,7 @@ export default function ChartUI({ loading, error, data }: ChartUIProps) {
 
   return (
     <Box sx={{
-      height: 300,
+      height: 350,
       width: '100%',
       bgcolor: 'rgba(186, 230, 253, 0.5)',
       borderRadius: 4,
@@ -61,7 +61,7 @@ export default function ChartUI({ loading, error, data }: ChartUIProps) {
           }
         }}
       >
-        Temperatura y Viento (próximas 24h)
+      📈 Temperatura y Viento (próximas 24h)
       </Typography>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
