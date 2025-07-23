@@ -38,8 +38,7 @@ const CohereAssistant: React.FC<Props> = ({ weatherParams }) => {
                 bgcolor: 'rgba(186,230,253,0.7)',
                 boxShadow: 3,
                 border: '1px solid #38bdf8',
-                maxWidth: 600,
-                mx: "auto",
+                mx: 2, // Esto establece márgenes horizontales de 2 (izquierda y derecha)
                 backdropFilter: 'blur(6px)',
             }}
         >
