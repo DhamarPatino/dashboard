@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 const COHERE_API_KEY = import.meta.env.VITE_COHERE_API_KEY || "";
 const COHERE_GENERATE_ENDPOINT = "https://api.cohere.ai/v1/generate";

@@ -5,7 +5,7 @@ import AlertUI from './components/AlertUI';
 import SeclectorUI from './components/SelectorUI';
 import IndicatorUI from './components/IndicatorUI';
 import DataFetcher from './functions/DataFetcher';
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import OnlineUI from './components/OnlineUI';
 import { CardContent } from '@mui/material';
 import ChartUI from './components/ChartUI';
@@ -27,7 +27,7 @@ import ThunderstormIcon from '@mui/icons-material/Thunderstorm';
 function App() {
    const [coords, setCoords] = useState({ lat: -2.17, lon: -79.92 });
    const dataFetcherOutput = DataFetcher({ lat: coords.lat, lon: coords.lon });
-   const [lastUpdated, setLastUpdated] = useState(new Date());
+   const [lastUpdated] = useState(new Date());
    const [locations] = useState<Location[]>(defaultLocations);
 
    console.log("DataFetcher Output:", dataFetcherOutput);
