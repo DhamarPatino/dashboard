@@ -17,26 +17,20 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { defaultLocations } from './functions/Locations';
 import type { Location } from './functions/Locations';
 import TableUI from './components/TableUI';
+import CohereAssistant from './components/CohereAssistant';
+import WbSunnyIcon from '@mui/icons-material/WbSunny';
+import CloudIcon from '@mui/icons-material/Cloud';
+import GrainIcon from '@mui/icons-material/Grain';
+import ThunderstormIcon from '@mui/icons-material/Thunderstorm';
 
 
 function App() {
    const [coords, setCoords] = useState({ lat: -2.17, lon: -79.92 });
-   const dataFetcherOutput = DataFetcher(coords);
+   const dataFetcherOutput = DataFetcher({ lat: coords.lat, lon: coords.lon });
    const [lastUpdated, setLastUpdated] = useState(new Date());
    const [locations] = useState<Location[]>(defaultLocations);
 
-   useEffect(() => {
-      const interval = setInterval(() => setLastUpdated(new Date()), 1000);
-      return () => clearInterval(interval);
-   }, []);
-
-   useEffect(() => {
-      console.log('Coordenadas cambiaron:', coords);
-   }, [coords]);
-
-   useEffect(() => {
-      console.log('Datos nuevos:', dataFetcherOutput.data);
-   }, [dataFetcherOutput.data]);
+   console.log("DataFetcher Output:", dataFetcherOutput);
 
    return (
       <>
@@ -87,7 +81,7 @@ function App() {
                   <>
 
                      {/* Indicadores con datos obtenidos */}
-                     <Grid size={{ xs: 12, md: 3 }} >
+                     <Grid size={{ xs: 12, md: 3 }}>
                         <IndicatorUI
                            title='Temperatura (2m)'
                            description={dataFetcherOutput.data.current.temperature_2m + " " + dataFetcherOutput.data.current_units.temperature_2m}
@@ -97,34 +91,12 @@ function App() {
                      </Grid>
                      <Grid size={{ xs: 12, md: 3 }}>
                         <IndicatorUI
-                           title='Visibilidad'
-                           description={
-                              dataFetcherOutput.data.hourly.visibility[
-                              dataFetcherOutput.data.hourly.visibility.length - 1
-                              ] + " " + dataFetcherOutput.data.hourly_units.visibility
-                           }
-                           icon={<VisibilityIcon sx={{ color: "#fff", fontSize: 32 }} />}
-                           iconBg="linear-gradient(135deg, #00c853 0%, #b2ff59 100%)"
-                        />
-                     </Grid>
-                     <Grid size={{ xs: 12, md: 3 }}>
-                        <IndicatorUI
-                           title='Velocidad del viento'
-                           description={dataFetcherOutput.data.current.wind_speed_10m + " " + dataFetcherOutput.data.current_units.wind_speed_10m}
-                           icon={<AirIcon sx={{ color: "#fff", fontSize: 32 }} />}
-                           iconBg="linear-gradient(135deg, #00c6fb 0%, #005bea 100%)"
-                        />
-                     </Grid>
-
-                     <Grid size={{ xs: 12, md: 3 }}>
-                        <IndicatorUI
                            title='Humedad relativa'
                            description={dataFetcherOutput.data.current.relative_humidity_2m + " " + dataFetcherOutput.data.current_units.relative_humidity_2m}
                            icon={<WaterDropIcon sx={{ color: "#fff", fontSize: 32 }} />}
                            iconBg="linear-gradient(135deg, #43cea2 0%, #185a9d 100%)"
                         />
                      </Grid>
-
                      <Grid size={{ xs: 12, md: 3 }}>
                         <IndicatorUI
                            title='Presión atmosférica'
@@ -133,21 +105,83 @@ function App() {
                            iconBg="linear-gradient(135deg, #f7971e 0%, #ffd200 100%)"
                         />
                      </Grid>
+                     <Grid size={{ xs: 12, md: 3 }}>
+                        <IndicatorUI
+                           title='Viento'
+                           description={
+                              `${dataFetcherOutput.data.current.wind_speed_10m} ${dataFetcherOutput.data.current_units.wind_speed_10m} ` +
+                              `| Dirección: ${dataFetcherOutput.data.current.wind_direction_10m}°`
+                           }
+                           icon={
+                              <AirIcon
+                                 sx={{
+                                    color: "#fff",
+                                    fontSize: 32,
+                                    transform: `rotate(${dataFetcherOutput.data.current.wind_direction_10m}deg)`
+                                 }}
+                              />
+                           }
+                           iconBg="linear-gradient(135deg, #00c6fb 0%, #005bea 100%)"
+                        />
+                     </Grid>
+                     <Grid size={{ xs: 12, md: 3 }}>
+                        <IndicatorUI
+                           title='Probabilidad de lluvia'
+                           description={dataFetcherOutput.data.hourly.precipitation_probability[0] + " %"}
+                           icon={<WaterDropIcon sx={{ color: "#fff", fontSize: 32 }} />}
+                           iconBg="linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%)"
+                        />
+                     </Grid>
+                     <Grid size={{ xs: 12, md: 3 }}>
+                        <IndicatorUI
+                           title='Visibilidad'
+                           description={
+                              dataFetcherOutput.data.hourly.visibility[
+                              dataFetcherOutput.data.hourly.visibility.length - 1
+                              ]/1000 + " km" 
+                           }
+                           icon={<VisibilityIcon sx={{ color: "#fff", fontSize: 32 }} />}
+                           iconBg="linear-gradient(135deg, #00c853 0%, #b2ff59 100%)"
+                        />
+                     </Grid>
 
+                     {/* Índice UV */}
+                     <Grid size={{ xs: 12, md: 3 }}>
+                        <IndicatorUI
+                           title='Índice UV Máximo'
+                           description={
+                              (dataFetcherOutput.data.daily?.uv_index_max?.[0] ?? "N/D") +
+                              (dataFetcherOutput.data.daily?.uv_index_max ? " UV" : "")
+                           }
+                           icon={<ThermostatIcon sx={{ color: "#fff", fontSize: 32 }} />}
+                           iconBg="linear-gradient(135deg, #fbbf24 0%, #f59e42 100%)"
+                        />
+                     </Grid>
+
+                     {/* Estado del cielo */}
+                     <Grid size={{ xs: 12, md: 3 }}>
+                        <IndicatorUI
+                           title='Condición del cielo'
+                           description={getWeatherDescription(dataFetcherOutput.data.current.weather_code)}
+                           icon={getWeatherIcon(dataFetcherOutput.data.current.weather_code)}
+                           iconBg="linear-gradient(135deg, #60a5fa 0%, #fbbf24 100%)"
+                        />
+                     </Grid>
+                    
                   </>
                )}
 
             </Grid>
-            {/* Gráfico */}
-            <Grid sx={{ display: { xs: "none", md: "block" } }}
-               size={{ xs: 12, md: 6 }}>
-               <ChartUI loading={dataFetcherOutput.loading}
+            {/* Gráfico y Tabla */}
+            <Grid size={{ xs: 12, md: 8 }} sx={{ mx: "auto" }}>
+               <ChartUI
+                  loading={dataFetcherOutput.loading}
                   error={dataFetcherOutput.error}
-                  data={dataFetcherOutput.data} />
+                  data={dataFetcherOutput.data}
+               />
+               
             </Grid>
-
-            {/* Tabla */}
-            <Grid size={{ xs: 12, md: 6 }} sx={{ display: { xs: "none", md: "block" } }}>
+            <Grid size={{ xs: 12, md: 12 }} sx={{ mx: "auto" }}>
                <TableUI
                   loading={dataFetcherOutput.loading}
                   error={dataFetcherOutput.error}
@@ -156,10 +190,42 @@ function App() {
             </Grid>
 
             {/* Información adicional */}
-            <Grid size={{ xs: 12, md: 12 }}>Elemento: Información adicional</Grid>
+            <Grid size={{ xs: 12, md: 12 }}>
+               {dataFetcherOutput.data && (
+                  <CohereAssistant
+                     weatherParams={{
+                        temperature: dataFetcherOutput.data.current.temperature_2m,
+                        humidity: dataFetcherOutput.data.current.relative_humidity_2m,
+                        wind: dataFetcherOutput.data.current.wind_speed_10m,
+                     }}
+                  />
+               )}
+            </Grid>
 
          </Grid>
       </>)
+}
+
+function getWeatherDescription(code: number) {
+  // Puedes ajustar según la documentación de Open-Meteo
+  if ([0].includes(code)) return "Despejado";
+  if ([1, 2].includes(code)) return "Mayormente despejado";
+  if ([3].includes(code)) return "Parcialmente nublado";
+  if ([45, 48].includes(code)) return "Niebla";
+  if ([51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return "Lluvia";
+  if ([71, 73, 75, 77, 85, 86].includes(code)) return "Nieve";
+  if ([95, 96, 99].includes(code)) return "Tormenta";
+  return "Desconocido";
+}
+
+function getWeatherIcon(code: number) {
+  if ([0].includes(code)) return <WbSunnyIcon sx={{ color: "#fff", fontSize: 32 }} />;
+  if ([1, 2, 3].includes(code)) return <CloudIcon sx={{ color: "#fff", fontSize: 32 }} />;
+  if ([45, 48].includes(code)) return <GrainIcon sx={{ color: "#fff", fontSize: 32 }} />;
+  if ([51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return <WaterDropIcon sx={{ color: "#fff", fontSize: 32 }} />;
+  if ([71, 73, 75, 77, 85, 86].includes(code)) return <GrainIcon sx={{ color: "#fff", fontSize: 32 }} />;
+  if ([95, 96, 99].includes(code)) return <ThunderstormIcon sx={{ color: "#fff", fontSize: 32 }} />;
+  return <CloudIcon sx={{ color: "#fff", fontSize: 32 }} />;
 }
 
 export default App

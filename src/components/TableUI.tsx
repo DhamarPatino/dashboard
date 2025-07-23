@@ -23,7 +23,7 @@ const columns: GridColDef[] = [
     field: 'time',
     headerName: '🕒 Fecha y Hora',
     width: 180,
-    renderCell: (params) => params.value, // mostrar tal cual
+    renderCell: (params) => params.value,
   },
   {
     field: 'temperature',
@@ -116,13 +116,17 @@ export default function TableUI({ loading, error, data }: TableUIProps) {
 
   return (
     <Paper
-      elevation={5}
+      elevation={6}
       sx={{
-        borderRadius: 3,
-        p: 2,
-        background: 'linear-gradient(135deg, #e0f7fa, #80deea)',
+        borderRadius: 4,
+        p: 3,
+        background: 'rgba(186,230,253,0.85)',
+        boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
         backdropFilter: 'blur(8px)',
-        color: '#006064',
+        color: '#0369a1',
+        maxWidth: 900,
+        mx: 'auto',
+        mt: 4,
       }}
     >
       <Typography
@@ -130,63 +134,70 @@ export default function TableUI({ loading, error, data }: TableUIProps) {
         gutterBottom
         sx={{
           fontWeight: 'bold',
-          color: '#004d40',
+          color: '#0ea5e9',
           mb: 2,
           userSelect: 'none',
-          textShadow: '0 1px 2px rgba(255, 255, 255, 0.6)',
+          textShadow: '0 1px 2px rgba(255,255,255,0.5)',
+          letterSpacing: 1,
         }}
       >
         📋 Datos Horarios de Clima
       </Typography>
       <Box
         sx={{
-          height: 300,
+          height: 420,
           width: '100%',
-          bgcolor: 'white',
-          borderRadius: 2,
+          bgcolor: 'rgba(255,255,255,0.7)',
+          borderRadius: 3,
           '& .MuiDataGrid-root': {
             border: 'none',
             fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+            background: 'transparent',
           },
           '& .MuiDataGrid-columnHeaders': {
-            backgroundColor: '#222',
-            color: '#827f7f',
+            background: 'linear-gradient(90deg, #38bdf8 0%, #bae6fd 100%)',
+            color: '#0369a1',
             fontWeight: '700',
             fontSize: '1rem',
-            borderTopLeftRadius: 8,
-            borderTopRightRadius: 8,
-            zIndex: 1,             // importante para que se vea sobre otras capas
+            borderTopLeftRadius: 12,
+            borderTopRightRadius: 12,
+            zIndex: 1,
+          },
+          '& .MuiDataGrid-row': {
+            background: 'rgba(255,255,255,0.6)',
+            borderRadius: 2,
           },
           '& .MuiDataGrid-row:hover': {
-            backgroundColor: 'rgba(2, 136, 209, 0.15)',
+            backgroundColor: 'rgba(2, 136, 209, 0.13)',
           },
           '& .temperature-cell': {
-            color: '#f97316',
+            color: '#f59e42',
             fontWeight: 700,
           },
           '& .wind-cell': {
-            color: '#0288d1',
+            color: '#0ea5e9',
             fontWeight: 700,
           },
           '& .humidity-cell': {
-            color: '#01579b',
+            color: '#0284c7',
             fontWeight: 700,
           },
           '& .MuiDataGrid-cell': {
-            color: '#004d40',
+            color: '#0369a1',
+            fontSize: 16,
           },
           '& .MuiDataGrid-footerContainer': {
-            backgroundColor: '#b3e5fc',
-            color: '#004d40',
-            borderBottomLeftRadius: 8,
-            borderBottomRightRadius: 8,
+            background: 'linear-gradient(90deg, #bae6fd 0%, #e0f2fe 100%)',
+            color: '#0369a1',
+            borderBottomLeftRadius: 12,
+            borderBottomRightRadius: 12,
           },
           '& .MuiPaginationItem-root': {
-            color: '#0288d1',
+            color: '#0ea5e9',
             fontWeight: '600',
           },
           '& .MuiPaginationItem-root.Mui-selected': {
-            backgroundColor: '#01579b',
+            backgroundColor: '#0ea5e9',
             color: 'white',
           },
         }}
@@ -194,12 +205,12 @@ export default function TableUI({ loading, error, data }: TableUIProps) {
         <DataGrid
           rows={rows}
           columns={columns}
-          pageSizeOptions={[5, 10]}
+          pageSizeOptions={[10]}
           initialState={{
-            pagination: { paginationModel: { pageSize: 5 } },
+            pagination: { paginationModel: { pageSize: 10 } },
           }}
           disableRowSelectionOnClick
-          sx={{ borderRadius: 2 }}
+          sx={{ borderRadius: 3 }}
         />
       </Box>
     </Paper>
