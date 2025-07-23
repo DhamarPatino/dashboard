@@ -10,6 +10,8 @@ import OnlineUI from './components/OnlineUI';
 import { CardContent } from '@mui/material';
 import TableUI from './components/TableUI';
 import ChartUI from './components/ChartUI';
+import CohereAssistant from './functions/CohereAssistantFetcher';
+
 function App() {
    const [coords, setCoords] = useState({ lat: -2.17, lon: -79.92 });
    const dataFetcherOutput = DataFetcher(coords);
@@ -113,7 +115,18 @@ function App() {
               />
             </Grid>
             {/* Información adicional */}
-            <Grid size={{ xs: 12, md: 12 }}>Elemento: Información adicional</Grid>
+            <Grid size={{ xs: 12, md: 12 }}>
+               {/* Elemento: Información adicional */}
+               {dataFetcherOutput.data && (
+                  <CohereAssistant
+                     weatherParams={{
+                        temperature: dataFetcherOutput.data.current.temperature_2m,
+                        humidity: dataFetcherOutput.data.current.relative_humidity_2m,
+                        wind: dataFetcherOutput.data.current.wind_speed_10m,
+                     }}
+                  />
+               )}
+            </Grid>
 
          </Grid>
       </>)

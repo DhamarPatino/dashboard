@@ -21,6 +21,7 @@
     "@mui/x-data-grid": "^8.7.0",
     "@radix-ui/react-toast": "^1.2.14",
     "class-variance-authority": "^0.7.1",
+    "cohere-ai": "^7.17.1",
     "install": "^0.13.0",
     "lucide-react": "^0.525.0",
     "npm": "^11.4.2",
